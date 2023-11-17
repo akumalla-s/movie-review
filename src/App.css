@@ -1,6 +1,13 @@
-/* NavBar.css */
+body {
+  margin: 0; 
+  padding: 0; 
+  font-family: 'Arial', sans-serif; 
+}
+
+/* Header */
 .header {
   background-color: orangered;
+  color: white;
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -36,4 +43,22 @@
 .navigation a:hover {
   background-color: white;
   color: orangered;
+}
+
+/* App Container */
+.app-container {
+  padding: 20px;
+}
+
+/* Footer */
+.footer {
+  background-color: orangered;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
