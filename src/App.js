@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout"
 import RestaurentReview from "./components/RestaurentReview";
 import About from "./components/About";
+import Footer from "./components/Footer";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -25,6 +26,9 @@ function App() {
           <Route path="/about" element={<About /> } />
           <Route path="/review/:restaurentId" element={!isLoggedIn && <RestaurentReview /> } />
         </Routes>
+      </div>
+      <div>
+        <Footer />
       </div>
     </Router>
   );
