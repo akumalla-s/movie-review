@@ -3,10 +3,13 @@ body {
   padding: 0; 
   font-family: 'Arial', sans-serif; 
 }
-
 /* Header */
-.header {
+.header, .footer{
   background-color: orangered;
+}
+
+.header {
+  
   color: white;
   padding: 10px;
   display: flex;
@@ -20,11 +23,8 @@ body {
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
-}
-
-.logo:hover {
-  background-color: white;
-  color: orangered;
+  padding: 10px;
+  border-radius: 20px;
 }
 
 .navigation {
@@ -38,11 +38,13 @@ body {
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
   padding: 10px;
+  border-radius: 20px;
 }
 
-.navigation a:hover {
+.logo:hover , .navigation a:hover {
   background-color: white;
   color: orangered;
+  border-radius: 20px;
 }
 
 /* App Container */
@@ -52,7 +54,6 @@ body {
 
 /* Footer */
 .footer {
-  background-color: orangered;
   color: white;
   padding: 10px;
   display: flex;
