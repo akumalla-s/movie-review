@@ -6,6 +6,7 @@ import axios from "axios";
 
 export default function MovieReview() {
   const username = useSelector((state) => state.auth.username);
+  const isAdmin = useSelector((state) => state.auth.isAdmin);
 
   const { movieId } = useParams();
   let navigate = useNavigate();
@@ -22,10 +23,6 @@ export default function MovieReview() {
   });
 
   const [comment, setComment] = useState("");
-
-  function handleBackButton() {
-    navigate("/");
-  }
 
   const findMovieUrl = `https://smooth-comfort-405104.uc.r.appspot.com/document/findOne/movies/${movieId}`;
   const updateMovieUrl = `https://smooth-comfort-405104.uc.r.appspot.com/document/updateOne/movies/${movieId}`;
@@ -47,16 +44,26 @@ export default function MovieReview() {
       const updatedMovie = { ...movie };
 
       const newCommentData = {
-        user: username || Date.now().toString(), // Use username if available, else use timestamp
+        user: username || Date.now().toString(),
         comment: comment,
       };
 
       updatedMovie.reviewComments.push(newCommentData);
 
-      const response = await axios.put(updateMovieUrl, updatedMovie, config);
-      setMovie(response.data.data);
+      await axios.put(updateMovieUrl, updatedMovie, config);
       setComment("");
+      await getMovieData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const handleDeleteComment = async (index) => {
+    try {
+      const updatedMovie = { ...movie };
+      updatedMovie.reviewComments.splice(index, 1);
+
+      await axios.put(updateMovieUrl, updatedMovie, config);
       await getMovieData();
     } catch (error) {
       console.log(error);
@@ -66,6 +73,7 @@ export default function MovieReview() {
   useEffect(() => {
     getMovieData();
   }, []);
+
   function handleCommentChange(e) {
     setComment(e.target.value);
   }
@@ -79,15 +87,20 @@ export default function MovieReview() {
           <img
             src={movie.moviePhoto}
             alt={movie.movieName}
-            style={{ maxWidth: '100px', maxHeight: '150px' }}
+            style={{ maxWidth: "100px", maxHeight: "150px" }}
           />
           <p>Rating: {movie.rating}</p>
           <h3>Reviews</h3>
           <ul>
             {movie.reviewComments.map((comment, index) => (
               <li key={index}>
-                <strong>User:</strong> {comment.user},{' '}
-                <strong>Comment:</strong> {comment.comment}
+                <strong>User:</strong> {comment.user},{" "}
+                <strong>Comment:</strong> {comment.comment}{" "}
+                {((username && username === comment.user) || isAdmin) && (
+                  <button onClick={() => handleDeleteComment(index)}>
+                    Delete
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -108,7 +121,7 @@ export default function MovieReview() {
         <p>Loading...</p>
       )}
       <div>
-        <button onClick={handleBackButton}>Back</button>
+        <button onClick={() => navigate("/")}>Back</button>
       </div>
     </div>
   );
