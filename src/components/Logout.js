@@ -18,7 +18,7 @@ export default function Logout() {
       navigate("/");
       window.location.reload();
     }
-  }, [navigate, user]);
+  }, [dispatch, navigate, user]);
 
   return null;
 }

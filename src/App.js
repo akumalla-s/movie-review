@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import About from "./components/About";
 import Footer from "./components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HelperService from "./services/HelperService";
 import { authActions } from "./store/authReducer";
 import RegistrationForm from "./components/RegistrationForm";
