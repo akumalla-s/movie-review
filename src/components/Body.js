@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import HelperService from '../services/HelperService';
+import AddNewMovie from './AddNewMovie';
 
 export default function Body() {
+
   const user = HelperService.getCurrentUserData();
+
   const [username, setUsername] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     if (user) {
       setUsername(user.username);   
+      setIsAdmin(user.isAdmin);
     }
   }, [user]);
   
@@ -14,6 +20,7 @@ export default function Body() {
   return (
     <div>
       <h1>Logged In Username: {username}</h1>
+      {isAdmin && <AddNewMovie isAdmin={isAdmin}/>} 
       Display Movies to Guest View 
     </div>
   )

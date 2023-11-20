@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 export default function MovieReview() {
   
-  const { restaurentId } = useParams();
+  const { movieId } = useParams();
 
   return (
     <div>

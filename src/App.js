@@ -7,12 +7,13 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import About from "./components/About";
 import Footer from "./components/Footer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import HelperService from "./services/HelperService";
 import { authActions } from "./store/authReducer";
 import RegistrationForm from "./components/RegistrationForm";
 import RegistrationSuccess from "./components/RegistrationSuccess";
 import MovieReview from "./components/MovieReview";
+import AddMovieData from "./components/AddMovieData";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -20,9 +21,12 @@ function App() {
 
   const dispatch = useDispatch();
 
+  const [isAdmin, setIsAdmin] = useState(false)
+
   useEffect(() => {
     const user = HelperService.getCurrentUserData();
     if (user) {
+      setIsAdmin(user.isAdmin)
       dispatch(authActions.login());
     }
   }, [dispatch]);
@@ -38,9 +42,10 @@ function App() {
           <Route path="/login" element={<Login /> } />
           <Route path="/logout" element={<Logout /> } />
           <Route path="/about" element={<About /> } />
-          <Route path="/review/:movieId" element={!isLoggedIn && <MovieReview /> } />
+          <Route path="/review/:movieId" element={isLoggedIn && <MovieReview /> } />
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />
+          <Route path="/add-movie-data" element={isAdmin && <AddMovieData />} />
         </Routes>
       </div>
       <div>
