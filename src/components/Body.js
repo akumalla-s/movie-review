@@ -20,7 +20,7 @@ export default function Body() {
   return (
     <div>
       <h1>Logged In Username: {username}</h1>
-      {isAdmin && <AddNewMovie isAdmin={isAdmin}/>} 
+      {isAdmin && <AddNewMovie />} 
       Display Movies to Guest View 
     </div>
   )

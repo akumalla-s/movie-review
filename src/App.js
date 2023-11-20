@@ -1,6 +1,6 @@
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Body from "./components/Body";
 import Login from "./components/Login";
@@ -17,17 +17,24 @@ import AddMovieData from "./components/AddMovieData";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  console.log("User Logged In: "+isLoggedIn);
+  const isAdmin = useSelector((state)=>state.auth.isAdmin);
+
+  console.log("User Logged In: "+isLoggedIn+" is Admin: "+isAdmin);
 
   const dispatch = useDispatch();
 
-  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     const user = HelperService.getCurrentUserData();
     if (user) {
-      setIsAdmin(user.isAdmin)
-      dispatch(authActions.login());
+      const username = user.username;
+      const _id = user._id;
+      const isAdmin = user.isAdmin;
+      dispatch(authActions.login({
+        username,
+        _id,
+        isAdmin,
+      }));
     }
   }, [dispatch]);
 
@@ -45,7 +52,8 @@ function App() {
           <Route path="/review/:movieId" element={isLoggedIn && <MovieReview /> } />
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />
-          <Route path="/add-movie-data" element={isAdmin && <AddMovieData />} />
+          {/* <Route path="/add-movie-data" element={isAdmin && <AddMovieData />} /> */}
+          <Route path="/add-movie-data" element={isAdmin ? <AddMovieData /> : <Navigate to="/" />} />
         </Routes>
       </div>
       <div>

@@ -1,13 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-export default function AddNewMovie({isAdmin}) {
+export default function AddNewMovie() {
   let navigate = useNavigate();
   
   function addNewMovie(){
-    if(isAdmin){
-      navigate("/add-movie-data");
-    }
+    navigate("/add-movie-data");
   }
   return (
     <div>
