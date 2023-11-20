@@ -5,7 +5,7 @@ body {
 }
 /* Header */
 .header, .footer{
-  background-color: orangered;
+  background-color: #05a9e4;
 }
 
 .header {
@@ -43,7 +43,7 @@ body {
 
 .logo:hover , .navigation a:hover {
   background-color: white;
-  color: orangered;
+  color: #05a9e4;
   border-radius: 20px;
 }
 

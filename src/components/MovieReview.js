@@ -1,13 +1,13 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 
-export default function RestaurentReview() {
+export default function MovieReview() {
   
   const { restaurentId } = useParams();
 
   return (
     <div>
-      send restaurent review to backend
+      send movie review to backend
     </div>
   )
 }

@@ -1,9 +1,19 @@
-import React from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
+import HelperService from '../services/HelperService';
 
 export default function Logout() {
-  return (
-    <div>
-      Logout
-    </div>
-  )
+  const user = HelperService.getCurrentUserData();
+  
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      localStorage.removeItem("userData");
+      navigate("/");
+      window.location.reload();
+    }
+  }, [navigate, user]);
+
+  return null;
 }

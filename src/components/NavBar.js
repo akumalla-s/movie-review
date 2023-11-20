@@ -9,7 +9,7 @@ export default function NavBar() {
   return (
     <header className="header">
       <NavLink to="/" className="logo">
-        DineHub
+        MovieMinds
       </NavLink>
 
       <nav className="navigation">
