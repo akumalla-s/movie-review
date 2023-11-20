@@ -1,17 +1,31 @@
 import "./App.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Body from "./components/Body";
 import Login from "./components/Login";
-import Logout from "./components/Logout"
-import RestaurentReview from "./components/RestaurentReview";
+import Logout from "./components/Logout";
 import About from "./components/About";
 import Footer from "./components/Footer";
+import { useEffect } from "react";
+import HelperService from "./services/HelperService";
+import { authActions } from "./store/authReducer";
+import RegistrationForm from "./components/RegistrationForm";
+import RegistrationSuccess from "./components/RegistrationSuccess";
+import MovieReview from "./components/MovieReview";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  console.log(isLoggedIn);
+  console.log("User Logged In: "+isLoggedIn);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = HelperService.getCurrentUserData();
+    if (user) {
+      dispatch(authActions.login());
+    }
+  }, [dispatch]);
 
   return (
     <Router>
@@ -24,7 +38,9 @@ function App() {
           <Route path="/login" element={<Login /> } />
           <Route path="/logout" element={<Logout /> } />
           <Route path="/about" element={<About /> } />
-          <Route path="/review/:restaurentId" element={!isLoggedIn && <RestaurentReview /> } />
+          <Route path="/review/:movieId" element={!isLoggedIn && <MovieReview /> } />
+          <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/registration-success" element={<RegistrationSuccess />} />
         </Routes>
       </div>
       <div>
