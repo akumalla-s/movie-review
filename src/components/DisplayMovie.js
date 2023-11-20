@@ -1,6 +1,9 @@
+// DisplayMovie.js
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { movieActions } from "../store/movieReducer";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import "../css/DisplayMovie.css";
 
 export default function DisplayMovie({
   movieName,
@@ -28,29 +31,18 @@ export default function DisplayMovie({
       })
     );
   }, []);
-  
 
   return (
-    <div>
-      <h3>{movieName}</h3>
-      <p>Year of Release: {yearOfRelease}</p>
-      {moviePhoto && (
-        <img
-          src={moviePhoto}
-          alt={movieName}
-          style={{ maxWidth: "100px", maxHeight: "150px" }}
-        />
-      )}
-      <p>Rating: {rating}</p>
-      <p>Review Comments:</p>
-      <ul>
-        {reviewComments.map((comment, index) => (
-          <li key={index}>
-            <strong>User:</strong> {comment.user}, <strong>Comment:</strong>{" "}
-            {comment.comment}
-          </li>
-        ))}
-      </ul>
+    <div className="movie-component">
+      <Link to={`/review/${movieId}`}>
+        {/* Use Link to navigate to the movie page */}
+        <h3>Movie Name: {movieName}</h3>
+      </Link>
+      <div className="movie-details">
+        <p>Year of Release: {yearOfRelease}</p>
+        <p>Rating: {rating}</p>
+      </div>
+      {moviePhoto && <img src={moviePhoto} alt={movieName} />}
     </div>
   );
 }

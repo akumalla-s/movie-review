@@ -49,10 +49,9 @@ function App() {
           <Route path="/login" element={<Login /> } />
           <Route path="/logout" element={<Logout /> } />
           <Route path="/about" element={<About /> } />
-          <Route path="/review/:movieId" element={isLoggedIn && <MovieReview /> } />
+          <Route path="/review/:movieId" element={ <MovieReview /> } />
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />
-          {/* <Route path="/add-movie-data" element={isAdmin && <AddMovieData />} /> */}
           <Route path="/add-movie-data" element={isAdmin ? <AddMovieData /> : <Navigate to="/" />} />
         </Routes>
       </div>
