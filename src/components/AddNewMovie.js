@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
+import "../css/AddNewMovie.css";
 
 export default function AddNewMovie() {
   let navigate = useNavigate();
@@ -8,7 +9,7 @@ export default function AddNewMovie() {
     navigate("/add-movie-data");
   }
   return (
-    <div>
+    <div className='add-movie-button'>
       <button onClick={addNewMovie}>Add New Movie</button>
     </div>
   )

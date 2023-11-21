@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import "../css/AddMovieData.css";
 
 const AddMovieData = () => {
   const token =
@@ -65,13 +66,14 @@ const AddMovieData = () => {
   };
 
   return (
-    <div>
-      <h2>Add Movie Data</h2>
-      <h3>{errorMessage}</h3>
+    <div className="movie-data-container">
+      <h2 className="container-title">Add Movie Data</h2>
+      <h3 className="error-message">{errorMessage}</h3>
       <form onSubmit={handleSubmit}>
         <label>
           Movie Name:
           <input
+            required
             type="text"
             name="movieName"
             value={movieData.movieName}
@@ -82,6 +84,7 @@ const AddMovieData = () => {
         <label>
           Year of Release:
           <input
+            required
             type="text"
             name="yearOfRelease"
             value={movieData.yearOfRelease}
@@ -89,10 +92,9 @@ const AddMovieData = () => {
           />
         </label>
         <br />
-        <br />
         <label>
           Upload Movie Photo:
-          <input type="file" onChange={handleImageChange} />
+          <input required type="file" onChange={handleImageChange} />
         </label>
         <br />
         <div>

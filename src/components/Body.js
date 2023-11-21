@@ -20,7 +20,6 @@ export default function Body() {
 
   return (
     <div>
-      <h1>Logged In Username: {username}</h1>
       {isAdmin && <AddNewMovie />} 
       <DisplayMovies />
     </div>

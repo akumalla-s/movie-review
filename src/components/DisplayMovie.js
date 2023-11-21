@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { movieActions } from "../store/movieReducer";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import "../css/DisplayMovie.css";
+import { Rating } from "@mui/material";
 
 export default function DisplayMovie({
   movieName,
@@ -35,12 +36,11 @@ export default function DisplayMovie({
   return (
     <div className="movie-component">
       <Link to={`/review/${movieId}`}>
-        {/* Use Link to navigate to the movie page */}
-        <h3>Movie Name: {movieName}</h3>
+        <h3>{movieName}</h3>
       </Link>
       <div className="movie-details">
         <p>Year of Release: {yearOfRelease}</p>
-        <p>Rating: {rating}</p>
+        <Rating name="half-rating-read" value={parseFloat(rating)} precision={0.5} readOnly />
       </div>
       {moviePhoto && <img src={moviePhoto} alt={movieName} />}
     </div>
