@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 import About from "./components/About";
 import Footer from "./components/Footer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import HelperService from "./services/HelperService";
 import { authActions } from "./store/authReducer";
 import RegistrationForm from "./components/RegistrationForm";
@@ -22,6 +22,8 @@ function App() {
   console.log("User Logged In: "+isLoggedIn+" is Admin: "+isAdmin);
 
   const dispatch = useDispatch();
+
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   useEffect(() => {
@@ -41,11 +43,11 @@ function App() {
   return (
     <Router>
       <div >
-        <NavBar />
+        <NavBar searchTerm={searchTerm} onSearch={setSearchTerm}/>
       </div>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Body />} />
+          <Route path="/" element={<Body searchTerm={searchTerm}/>} />
           <Route path="/login" element={<Login /> } />
           <Route path="/logout" element={<Logout /> } />
           <Route path="/about" element={<About /> } />

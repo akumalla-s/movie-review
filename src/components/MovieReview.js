@@ -77,7 +77,6 @@ export default function MovieReview() {
   };
 
   const handleUpdateComment = async (index) => {
-    console.log("Update comment");
     try {
       setComment(movie.reviewComments[index].comment);
       const updatedMovie = { ...movie };
