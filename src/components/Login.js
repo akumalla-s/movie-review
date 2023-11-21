@@ -51,7 +51,16 @@ export default function Login() {
         username: user.username,
         isAdmin: user.isAdmin,
       };
-      dispatch(authActions.login());
+
+      const username = user.username;
+      const _id = user._id;
+      const isAdmin = user.isAdmin;
+      dispatch(authActions.login({
+        username,
+        _id,
+        isAdmin,
+      }));
+
       localStorage.setItem("userData", JSON.stringify(userData));
       console.log("User Data _id: "+ userData._id+" username: "+ userData.username+" admin: "+userData.isAdmin);
       navigate("/");
