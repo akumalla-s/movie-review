@@ -76,6 +76,19 @@ export default function MovieReview() {
     }
   };
 
+  const handleUpdateComment = async (index) => {
+    console.log("Update comment");
+    try {
+      setComment(movie.reviewComments[index].comment);
+      const updatedMovie = { ...movie };
+      updatedMovie.reviewComments[index].comment = comment;
+      await axios.put(updateMovieUrl, updatedMovie, config);
+      await getMovieData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDeleteMovie = async () => {
     try {
       await axios.delete(deleteMovieUrl, config);
@@ -186,12 +199,20 @@ export default function MovieReview() {
                       <strong>User:</strong> {comment.user},{" "}
                       <strong>Comment:</strong> {comment.comment}{" "}
                       {((username && username === comment.user) || isAdmin) && (
-                        <span
-                          className="delete-action"
-                          onClick={() => handleDeleteComment(index)}
-                        >
-                          Delete
-                        </span>
+                        <>
+                          <span
+                            className="delete-action"
+                            onClick={() => handleUpdateComment(index)}
+                          >
+                            Edit
+                          </span>
+                          <span
+                            className="delete-action"
+                            onClick={() => handleDeleteComment(index)}
+                          >
+                            Delete
+                          </span>
+                        </>
                       )}
                     </li>
                   )
