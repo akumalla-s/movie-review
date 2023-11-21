@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import DisplayMovie from './DisplayMovie';
 import ReactPaginate from 'react-paginate';
 import '../css/DisplayMovie.css';
+import GetToken from '../services/GetToken';
+import URL from '../services/URL';
 
 export default function DisplayMovies({searchTerm={searchTerm}}) {
 
@@ -11,8 +13,8 @@ export default function DisplayMovies({searchTerm={searchTerm}}) {
   const moviesPerPage = 4;
   const pagesVisited = pageNumber * moviesPerPage;
 
-  const getAllMoviesUrl = 'https://smooth-comfort-405104.uc.r.appspot.com/document/findAll/movies';
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTkzMWM4NjY5ZjJjZjM0N2YyNmMyZCIsInVzZXJuYW1lIjoiMDAyNzk4MTY2UyIsImlhdCI6MTcwMDM0NDI2OCwiZXhwIjoxNzAxNjQwMjY4fQ.3YuL_w8ovVtTfS0RvFuPSf-f1DbXF4jL16hGqmJyJIo";
+  const getAllMoviesUrl = URL.getAllMoviesUrl();
+  const token = GetToken.returnToken();
   const config = { headers: { Authorization: `${token}` } };
 
   const getAllMovies = async () => {

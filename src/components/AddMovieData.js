@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "../css/AddMovieData.css";
+import GetToken from '../services/GetToken';
+import URL from "../services/URL";
 
 const AddMovieData = () => {
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTkzMWM4NjY5ZjJjZjM0N2YyNmMyZCIsInVzZXJuYW1lIjoiMDAyNzk4MTY2UyIsImlhdCI6MTcwMDM0NDI2OCwiZXhwIjoxNzAxNjQwMjY4fQ.3YuL_w8ovVtTfS0RvFuPSf-f1DbXF4jL16hGqmJyJIo";
-  const addMovieUrl =
-    "https://smooth-comfort-405104.uc.r.appspot.com/document/createorupdate/movies";
+  
+  const token = GetToken.returnToken();
+  const addMovieUrl = URL.addMovieUrl();
   const config = { headers: { Authorization: `${token}` } };
 
   const [errorMessage, setErrorMessage] = useState('');
