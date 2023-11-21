@@ -55,9 +55,7 @@ function App() {
           <Route path="/add-movie-data" element={isAdmin ? <AddMovieData /> : <Navigate to="/" />} />
         </Routes>
       </div>
-      <div>
-        <Footer />
-      </div>
+      
     </Router>
   );
 }

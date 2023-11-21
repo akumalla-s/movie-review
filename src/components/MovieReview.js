@@ -103,11 +103,7 @@ export default function MovieReview() {
             </div>
             <div className="delete-movie-button">
               {isAdmin && (
-                <button
-                  onClick={handleDeleteMovie}
-                >
-                  Delete Movie
-                </button>
+                <button onClick={handleDeleteMovie}>Delete Movie</button>
               )}
             </div>
           </div>
