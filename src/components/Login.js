@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useDispatch } from 'react-redux';
 import { authActions } from '../store/authReducer';
+import GetToken from '../services/GetToken';
+import URL from '../services/URL';
 
 export default function Login() {
 
@@ -17,8 +19,8 @@ export default function Login() {
 
   const [users, setUsers] = useState([]);
 
-  const findAllUsersUrl = "https://smooth-comfort-405104.uc.r.appspot.com/document/findAll/users";
-  const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTkzMWM4NjY5ZjJjZjM0N2YyNmMyZCIsInVzZXJuYW1lIjoiMDAyNzk4MTY2UyIsImlhdCI6MTcwMDM0NDI2OCwiZXhwIjoxNzAxNjQwMjY4fQ.3YuL_w8ovVtTfS0RvFuPSf-f1DbXF4jL16hGqmJyJIo";
+  const findAllUsersUrl = URL.findAllUsersUrl();
+  const token = GetToken.returnToken();
   const config = { headers: { Authorization: `${token}` } };
 
   const fetchAllUsers = async ()=>{

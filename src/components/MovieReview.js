@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { Rating } from "@mui/material";
 import "../css/MovieReview.css";
+import GetToken from '../services/GetToken';
+import URL from "../services/URL";
 
 export default function MovieReview() {
   const username = useSelector((state) => state.auth.username);
@@ -28,16 +30,18 @@ export default function MovieReview() {
   const [userRating, setUserRating] = useState("");
   const [showComments, setShowComments] = useState(false);
 
-  const findMovieUrl = `https://smooth-comfort-405104.uc.r.appspot.com/document/findOne/movies/${movieId}`;
-  const updateMovieUrl = `https://smooth-comfort-405104.uc.r.appspot.com/document/updateOne/movies/${movieId}`;
-  const deleteMovieUrl = `https://smooth-comfort-405104.uc.r.appspot.com/document/deleteOne/movies/${movieId}`;
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTkzMWM4NjY5ZjJjZjM0N2YyNmMyZCIsInVzZXJuYW1lIjoiMDAyNzk4MTY2UyIsImlhdCI6MTcwMDM0NDI2OCwiZXhwIjoxNzAxNjQwMjY4fQ.3YuL_w8ovVtTfS0RvFuPSf-f1DbXF4jL16hGqmJyJIo";
+  const findMovieUrl = URL.findMovieUrl();
+  const updateMovieUrl = URL.updateMovieUrl();
+  const deleteMovieUrl = URL.deleteMovieUrl();
+  const findMovieWithId = `${findMovieUrl}/${movieId}`;
+  const updateMovieWithId = `${updateMovieUrl}/${movieId}`;
+  const deleteMovieWithId = `${deleteMovieUrl}/${movieId}`;
+  const token = GetToken.returnToken();
   const config = { headers: { Authorization: `${token}` } };
 
   const getMovieData = async () => {
     try {
-      const response = await axios.get(findMovieUrl, config);
+      const response = await axios.get(findMovieWithId, config);
       setMovie(response.data.data);
     } catch (error) {
       console.log(error);
@@ -56,7 +60,7 @@ export default function MovieReview() {
 
       updatedMovie.reviewComments.push(newCommentData);
 
-      await axios.put(updateMovieUrl, updatedMovie, config);
+      await axios.put(updateMovieWithId, updatedMovie, config);
       setComment("");
       await getMovieData();
     } catch (error) {
@@ -69,7 +73,7 @@ export default function MovieReview() {
       const updatedMovie = { ...movie };
       updatedMovie.reviewComments.splice(index, 1);
 
-      await axios.put(updateMovieUrl, updatedMovie, config);
+      await axios.put(updateMovieWithId, updatedMovie, config);
       await getMovieData();
     } catch (error) {
       console.log(error);
@@ -81,7 +85,7 @@ export default function MovieReview() {
       setComment(movie.reviewComments[index].comment);
       const updatedMovie = { ...movie };
       updatedMovie.reviewComments[index].comment = comment;
-      await axios.put(updateMovieUrl, updatedMovie, config);
+      await axios.put(updateMovieWithId, updatedMovie, config);
       await getMovieData();
     } catch (error) {
       console.log(error);
@@ -90,7 +94,7 @@ export default function MovieReview() {
 
   const handleDeleteMovie = async () => {
     try {
-      await axios.delete(deleteMovieUrl, config);
+      await axios.delete(deleteMovieWithId, config);
       navigate("/");
     } catch (error) {
       console.log(error);

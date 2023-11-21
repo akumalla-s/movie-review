@@ -3,17 +3,18 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/RegistrationForm.css";
 
+import GetToken from "../services/GetToken";
+import URL from "../services/URL";
+
 export default function RegistrationForm() {
   let navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
 
-  const findAllUsersUrl =
-    "https://smooth-comfort-405104.uc.r.appspot.com/document/findAll/users";
-  const createUserUrl =
-    "https://smooth-comfort-405104.uc.r.appspot.com/document/createorupdate/users";
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTkzMWM4NjY5ZjJjZjM0N2YyNmMyZCIsInVzZXJuYW1lIjoiMDAyNzk4MTY2UyIsImlhdCI6MTcwMDM0NDI2OCwiZXhwIjoxNzAxNjQwMjY4fQ.3YuL_w8ovVtTfS0RvFuPSf-f1DbXF4jL16hGqmJyJIo";
+  const findAllUsersUrl = URL.findAllUsersUrl();
+  const createUserUrl = URL.createUserUrl();
+  const token = GetToken.returnToken();
+
   const config = { headers: { Authorization: `${token}` } };
 
   const fetchAllUsers = async () => {
@@ -98,8 +99,8 @@ export default function RegistrationForm() {
           "Username already exists. Please choose a different username."
         );
         return;
-      }else{
-        setUserRegistrationError('');
+      } else {
+        setUserRegistrationError("");
       }
       console.log(user);
       var response = await axios.post(createUserUrl, user, config);
