@@ -3,7 +3,7 @@ import HelperService from '../services/HelperService';
 import AddNewMovie from './AddNewMovie';
 import DisplayMovies from './DisplayMovies';
 
-export default function Body() {
+export default function Body({searchTerm}) {
 
   const user = HelperService.getCurrentUserData();
 
@@ -21,7 +21,7 @@ export default function Body() {
   return (
     <div>
       {isAdmin && <AddNewMovie />} 
-      <DisplayMovies />
+      <DisplayMovies searchTerm={searchTerm}/>
     </div>
   )
 }
