@@ -117,7 +117,7 @@ export default function UpdateMovieData() {
         <br />
         <label>
           Upload Movie Photo:
-          <input required type="file" onChange={handleImageChange} />
+          <input type="file" onChange={handleImageChange} />
         </label>
         <br />
         <div>
