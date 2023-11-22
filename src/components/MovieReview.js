@@ -55,24 +55,15 @@ export default function MovieReview() {
 
   const handleRatingChange = (event, newValue) => {
     if (newValue > 0) {
-      const newNumberOfUsersGivenRating =
-        movie.numberOfUsersGivenRating + 1;
-      const newTotalRatingValue =
-        movie.totalRatingValue + newValue;
-  
-      const newRatingValue =
-        newTotalRatingValue / newNumberOfUsersGivenRating;
-
       setUserRating(newValue.toString());
-
+  
       setMovie((prevMovie) => ({
         ...prevMovie,
-        rating: newRatingValue.toString(),
-        numberOfUsersGivenRating: newNumberOfUsersGivenRating,
-        totalRatingValue: newTotalRatingValue,
+        rating: ((prevMovie.totalRatingValue + newValue) / (prevMovie.numberOfUsersGivenRating + 1)).toString(),
       }));
     }
   };
+  
   useEffect(() => {
     //console.log(movie);
   }, [movie]);
@@ -93,11 +84,42 @@ export default function MovieReview() {
         timestamp: new Date().toLocaleString()
       };
 
-      updatedMovie.reviewComments.push(newCommentData);
+      const existingUserCommentIndex = updatedMovie.reviewComments.findIndex(
+        (existingComment) => existingComment.user === newCommentData.user
+      );  
+
+      const existingUserComment = updatedMovie.reviewComments.find(
+        (existingComment) => existingComment.user === newCommentData.user
+      );
+
+      if (existingUserComment) {
+        // If the user already has a comment, update it
+
+        const existingUserComment = updatedMovie.reviewComments[existingUserCommentIndex];
+        const previousRating = parseFloat(existingUserComment.Rating);
+
+        existingUserComment.comment = newCommentData.comment;
+        existingUserComment.Rating = newCommentData.Rating;
+        existingUserComment.timestamp = newCommentData.timestamp;
+
+        // Update numberOfUsersGivenRating and totalRatingValue
+        //updatedMovie.numberOfUsersGivenRating -= 1;
+        updatedMovie.totalRatingValue -= previousRating;
+        updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
+        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+      } else {
+        // If the user doesn't have a comment, add a new comment
+        updatedMovie.reviewComments.push(newCommentData);
+        // Update numberOfUsersGivenRating and totalRatingValue
+        updatedMovie.numberOfUsersGivenRating += 1;
+        updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
+        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+      }
 
       await axios.put(updateMovieWithId, updatedMovie, config);
       setComment("");
       setMessage("");
+      setUserRating("");
       await getMovieData();
     } catch (error) {
       console.log(error);
@@ -119,14 +141,20 @@ export default function MovieReview() {
   const handleUpdateComment = async (index) => {
     try {
       setComment(movie.reviewComments[index].comment);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+        
       const updatedMovie = { ...movie };
       updatedMovie.reviewComments[index].comment = comment;
-      await axios.put(updateMovieWithId, updatedMovie, config);
-      await getMovieData();
+      
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    //console.log("Updated comment: " + comment);
+  }, [comment]);
 
   const handleDeleteMovie = async () => {
     try {
@@ -201,7 +229,7 @@ export default function MovieReview() {
               <label className="add-review-reivewtitle">Review:</label>
               <Rating
                 name="half-rating"
-                defaultValue={2.5}
+                defaultValue={0.0}
                 precision={0.5}
                 onChange={handleRatingChange}
               />
