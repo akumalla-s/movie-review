@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { Rating } from "@mui/material";
 import "../css/MovieReview.css";
-import GetToken from '../services/GetToken';
+import GetToken from "../services/GetToken";
 import URL from "../services/URL";
 
 export default function MovieReview() {
@@ -29,7 +29,7 @@ export default function MovieReview() {
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const findMovieUrl = URL.findMovieUrl();
   const updateMovieUrl = URL.updateMovieUrl();
@@ -56,14 +56,17 @@ export default function MovieReview() {
   const handleRatingChange = (event, newValue) => {
     if (newValue > 0) {
       setUserRating(newValue.toString());
-  
+
       setMovie((prevMovie) => ({
         ...prevMovie,
-        rating: ((prevMovie.totalRatingValue + newValue) / (prevMovie.numberOfUsersGivenRating + 1)).toString(),
+        rating: (
+          (prevMovie.totalRatingValue + newValue) /
+          (prevMovie.numberOfUsersGivenRating + 1)
+        ).toString(),
       }));
     }
   };
-  
+
   useEffect(() => {
     //console.log(movie);
   }, [movie]);
@@ -71,22 +74,24 @@ export default function MovieReview() {
   const handleAddComment = async () => {
     try {
       if (!userRating) {
-        setMessage('Rating is required value!');
+        setMessage("Rating is required value!");
         return;
       }
 
       const updatedMovie = { ...movie };
 
+      let isUpdating = false;
+
       const newCommentData = {
         user: username || Date.now().toString(),
         comment: comment,
         Rating: userRating,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
       };
 
       const existingUserCommentIndex = updatedMovie.reviewComments.findIndex(
         (existingComment) => existingComment.user === newCommentData.user
-      );  
+      );
 
       const existingUserComment = updatedMovie.reviewComments.find(
         (existingComment) => existingComment.user === newCommentData.user
@@ -94,8 +99,10 @@ export default function MovieReview() {
 
       if (existingUserComment) {
         // If the user already has a comment, update it
+        isUpdating = true;
 
-        const existingUserComment = updatedMovie.reviewComments[existingUserCommentIndex];
+        const existingUserComment =
+          updatedMovie.reviewComments[existingUserCommentIndex];
         const previousRating = parseFloat(existingUserComment.Rating);
 
         existingUserComment.comment = newCommentData.comment;
@@ -103,22 +110,29 @@ export default function MovieReview() {
         existingUserComment.timestamp = newCommentData.timestamp;
 
         // Update numberOfUsersGivenRating and totalRatingValue
-        //updatedMovie.numberOfUsersGivenRating -= 1;
         updatedMovie.totalRatingValue -= previousRating;
         updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
-        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+        updatedMovie.rating =
+          updatedMovie.totalRatingValue / updatedMovie.numberOfUsersGivenRating;
       } else {
         // If the user doesn't have a comment, add a new comment
         updatedMovie.reviewComments.push(newCommentData);
         // Update numberOfUsersGivenRating and totalRatingValue
         updatedMovie.numberOfUsersGivenRating += 1;
         updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
-        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+        updatedMovie.rating =
+          updatedMovie.totalRatingValue / updatedMovie.numberOfUsersGivenRating;
       }
 
-      await axios.put(updateMovieWithId, updatedMovie, config);
+      const response = await axios.put(updateMovieWithId, updatedMovie, config);
+      if(response.status === 200){
+        if(isUpdating){
+          setMessage("Your Review updated successfully")
+        }else{
+          setMessage("Your Review addeed successfully")
+        }
+      }
       setComment("");
-      setMessage("");
       setUserRating("");
       await getMovieData();
     } catch (error) {
@@ -127,32 +141,54 @@ export default function MovieReview() {
   };
 
   const handleDeleteComment = async (index) => {
-
     try {
       const updatedMovie = { ...movie };
 
-      const newCommentData = {
-        user: username || Date.now().toString(),
-        comment: comment,
-        Rating: userRating,
-        timestamp: new Date().toLocaleString()
-      };
-
       const existingUserCommentIndex = updatedMovie.reviewComments.findIndex(
-        (existingComment) => existingComment.user === newCommentData.user
-      );  
+        (existingComment) => existingComment.user === username
+      );
 
       const existingUserComment = updatedMovie.reviewComments[existingUserCommentIndex];
-      const previousRating = parseFloat(existingUserComment.Rating);
-      
-      updatedMovie.numberOfUsersGivenRating -= 1;
-      updatedMovie.totalRatingValue -= previousRating;
-      updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
-      
-      updatedMovie.reviewComments.splice(index, 1);
 
-      await axios.put(updateMovieWithId, updatedMovie, config);
-      await getMovieData();
+      if (existingUserCommentIndex !== -1) {
+
+        const previousRating = parseFloat(existingUserComment.Rating);
+
+        updatedMovie.numberOfUsersGivenRating -= 1;
+        updatedMovie.totalRatingValue -= previousRating;
+        updatedMovie.rating =
+          updatedMovie.numberOfUsersGivenRating > 0
+            ? updatedMovie.totalRatingValue /
+              updatedMovie.numberOfUsersGivenRating
+            : 0;
+
+        updatedMovie.reviewComments.splice(index, 1);
+
+        const response = await axios.put(updateMovieWithId, updatedMovie, config);
+        if(response.status === 200){
+            setMessage("Your Review deleted successfully")
+        }
+        await getMovieData();
+      }else if(isAdmin){
+        // console.log("Admin delete");
+        if (updatedMovie.reviewComments[index]) {
+          updatedMovie.numberOfUsersGivenRating -= 1;
+          updatedMovie.totalRatingValue -= parseFloat(updatedMovie.reviewComments[index].Rating);
+          updatedMovie.rating =
+            updatedMovie.numberOfUsersGivenRating > 0
+              ? updatedMovie.totalRatingValue / updatedMovie.numberOfUsersGivenRating
+              : 0;
+  
+          updatedMovie.reviewComments.splice(index, 1);
+          const response = await axios.put(updateMovieWithId, updatedMovie, config);
+          if(response.status === 200){
+            setMessage("Your Review deleted successfully")
+          }
+          await getMovieData();
+        } else {
+          console.log("Comment not found for deletion");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -163,10 +199,9 @@ export default function MovieReview() {
       setComment(movie.reviewComments[index].comment);
 
       await new Promise((resolve) => setTimeout(resolve, 0));
-        
+
       const updatedMovie = { ...movie };
       updatedMovie.reviewComments[index].comment = comment;
-      
     } catch (error) {
       console.log(error);
     }
@@ -186,13 +221,12 @@ export default function MovieReview() {
   };
 
   const handleEditMovie = async () => {
-    navigate(`/update-movie-data/${movieId}`)
-  }
+    navigate(`/update-movie-data/${movieId}`);
+  };
 
   function handleCommentChange(e) {
     setComment(e.target.value);
   }
-  
 
   return (
     <div className="movie-review-container">
@@ -203,10 +237,7 @@ export default function MovieReview() {
               <button onClick={() => navigate("/")}>&larr; Go back</button>
             </div>
             <div className="delete-movie-button">
-              {isAdmin && (
-                <button onClick={handleEditMovie}>Edit Movie</button>
-              )}
-              {' '}
+              {isAdmin && <button onClick={handleEditMovie}>Edit Movie</button>}{" "}
               {isAdmin && (
                 <button onClick={handleDeleteMovie}>Delete Movie</button>
               )}
@@ -236,7 +267,7 @@ export default function MovieReview() {
 
           <div className="add-review">
             <h3>Add Your Review</h3>
-            <strong >{message}</strong>
+            <strong>{message}</strong>
             <div className="add-review-title">
               <label>Comment:</label>
               <input
@@ -276,21 +307,21 @@ export default function MovieReview() {
                       <strong>Rated:</strong> {comment.Rating}{" "}
                       <strong>Comment:</strong> {comment.comment}{" "}
                       <strong>Posted On:</strong> {comment.timestamp}{" "}
+                      {username && username === comment.user && (
+                        <span
+                          className="delete-action"
+                          onClick={() => handleUpdateComment(index)}
+                        >
+                          Edit
+                        </span>
+                      )}
                       {((username && username === comment.user) || isAdmin) && (
-                        <>
-                          <span
-                            className="delete-action"
-                            onClick={() => handleUpdateComment(index)}
-                          >
-                            Edit
-                          </span>
-                          <span
-                            className="delete-action"
-                            onClick={() => handleDeleteComment(index)}
-                          >
-                            Delete
-                          </span>
-                        </>
+                        <span
+                          className="delete-action"
+                          onClick={() => handleDeleteComment(index)}
+                        >
+                          Delete
+                        </span>
                       )}
                     </li>
                   )
