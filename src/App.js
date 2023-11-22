@@ -14,6 +14,7 @@ import RegistrationForm from "./components/RegistrationForm";
 import RegistrationSuccess from "./components/RegistrationSuccess";
 import MovieReview from "./components/MovieReview";
 import AddMovieData from "./components/AddMovieData";
+import UpdateMovieData from "./components/UpdateMovieData";
 
 function App() {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -55,6 +56,7 @@ function App() {
           <Route path="/register" element={<RegistrationForm />} />
           <Route path="/registration-success" element={<RegistrationSuccess />} />
           <Route path="/add-movie-data" element={isAdmin ? <AddMovieData /> : <Navigate to="/" />} />
+          <Route path="/update-movie-data/:movieId" element={isAdmin ? <UpdateMovieData /> : <Navigate to="/" />} />
         </Routes>
       </div>
       
