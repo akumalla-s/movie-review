@@ -75,7 +75,7 @@ export default function UpdateMovieData() {
       var response = await axios.put(updateMovieWithId, movie, config);
       console.log(response);
       if(response.data.status === "success"){
-        setErrorMessage("Movie added successfully!");
+        setErrorMessage("Movie updated successfully!");
         setMovie({
           movieName: '',
           yearOfRelease:'',
