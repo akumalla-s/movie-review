@@ -29,6 +29,7 @@ export default function MovieReview() {
   const [comment, setComment] = useState("");
   const [userRating, setUserRating] = useState("");
   const [showComments, setShowComments] = useState(false);
+  const [message, setMessage] = useState('');
 
   const findMovieUrl = URL.findMovieUrl();
   const updateMovieUrl = URL.updateMovieUrl();
@@ -48,9 +49,33 @@ export default function MovieReview() {
     }
   };
 
+  useEffect(() => {
+    getMovieData();
+  }, []);
+
+  const handleRatingChange = (event, newValue) => {
+    if (newValue > 0) {
+      setUserRating(newValue.toString());
+  
+      setMovie((prevMovie) => ({
+        ...prevMovie,
+        rating: ((prevMovie.totalRatingValue + newValue) / (prevMovie.numberOfUsersGivenRating + 1)).toString(),
+      }));
+    }
+  };
+  
+  useEffect(() => {
+    //console.log(movie);
+  }, [movie]);
+
   const handleAddComment = async () => {
     try {
-      const updatedMovie = { ...movie, rating: userRating };
+      if (!userRating) {
+        setMessage('Rating is required value!');
+        return;
+      }
+
+      const updatedMovie = { ...movie };
 
       const newCommentData = {
         user: username || Date.now().toString(),
@@ -59,10 +84,42 @@ export default function MovieReview() {
         timestamp: new Date().toLocaleString()
       };
 
-      updatedMovie.reviewComments.push(newCommentData);
+      const existingUserCommentIndex = updatedMovie.reviewComments.findIndex(
+        (existingComment) => existingComment.user === newCommentData.user
+      );  
+
+      const existingUserComment = updatedMovie.reviewComments.find(
+        (existingComment) => existingComment.user === newCommentData.user
+      );
+
+      if (existingUserComment) {
+        // If the user already has a comment, update it
+
+        const existingUserComment = updatedMovie.reviewComments[existingUserCommentIndex];
+        const previousRating = parseFloat(existingUserComment.Rating);
+
+        existingUserComment.comment = newCommentData.comment;
+        existingUserComment.Rating = newCommentData.Rating;
+        existingUserComment.timestamp = newCommentData.timestamp;
+
+        // Update numberOfUsersGivenRating and totalRatingValue
+        //updatedMovie.numberOfUsersGivenRating -= 1;
+        updatedMovie.totalRatingValue -= previousRating;
+        updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
+        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+      } else {
+        // If the user doesn't have a comment, add a new comment
+        updatedMovie.reviewComments.push(newCommentData);
+        // Update numberOfUsersGivenRating and totalRatingValue
+        updatedMovie.numberOfUsersGivenRating += 1;
+        updatedMovie.totalRatingValue += parseFloat(newCommentData.Rating);
+        updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+      }
 
       await axios.put(updateMovieWithId, updatedMovie, config);
       setComment("");
+      setMessage("");
+      setUserRating("");
       await getMovieData();
     } catch (error) {
       console.log(error);
@@ -84,14 +141,20 @@ export default function MovieReview() {
   const handleUpdateComment = async (index) => {
     try {
       setComment(movie.reviewComments[index].comment);
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+        
       const updatedMovie = { ...movie };
       updatedMovie.reviewComments[index].comment = comment;
-      await axios.put(updateMovieWithId, updatedMovie, config);
-      await getMovieData();
+      
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    //console.log("Updated comment: " + comment);
+  }, [comment]);
 
   const handleDeleteMovie = async () => {
     try {
@@ -106,13 +169,10 @@ export default function MovieReview() {
     navigate(`/update-movie-data/${movieId}`)
   }
 
-  useEffect(() => {
-    getMovieData();
-  }, []);
-
   function handleCommentChange(e) {
     setComment(e.target.value);
   }
+  
 
   return (
     <div className="movie-review-container">
@@ -156,6 +216,7 @@ export default function MovieReview() {
 
           <div className="add-review">
             <h3>Add Your Review</h3>
+            <strong >{message}</strong>
             <div className="add-review-title">
               <label>Comment:</label>
               <input
@@ -168,26 +229,9 @@ export default function MovieReview() {
               <label className="add-review-reivewtitle">Review:</label>
               <Rating
                 name="half-rating"
-                defaultValue={2.5}
+                defaultValue={0.0}
                 precision={0.5}
-                onChange={(event, newValue) => {
-                  if (newValue > 0) {
-                    const newNumberOfUsersGivenRating =
-                      movie.numberOfUsersGivenRating + 1;
-                    const newTotalRatingValue =
-                      movie.totalRatingValue + newValue;
-
-                    const newRatingValue =
-                      newTotalRatingValue / newNumberOfUsersGivenRating;
-
-                    setMovie({
-                      ...movie,
-                      numberOfUsersGivenRating: newNumberOfUsersGivenRating,
-                      totalRatingValue: newTotalRatingValue,
-                    });
-                    setUserRating(newRatingValue.toString());
-                  }
-                }}
+                onChange={handleRatingChange}
               />
             </div>
             <button onClick={handleAddComment}>Add Your Review</button>
@@ -209,6 +253,7 @@ export default function MovieReview() {
                   comment.comment.trim() !== "" && (
                     <li key={index}>
                       <strong>User:</strong> {comment.user},{" "}
+                      <strong>Rated:</strong> {comment.Rating}{" "}
                       <strong>Comment:</strong> {comment.comment}{" "}
                       <strong>Posted On:</strong> {comment.timestamp}{" "}
                       {((username && username === comment.user) || isAdmin) && (
