@@ -127,8 +127,28 @@ export default function MovieReview() {
   };
 
   const handleDeleteComment = async (index) => {
+
     try {
       const updatedMovie = { ...movie };
+
+      const newCommentData = {
+        user: username || Date.now().toString(),
+        comment: comment,
+        Rating: userRating,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const existingUserCommentIndex = updatedMovie.reviewComments.findIndex(
+        (existingComment) => existingComment.user === newCommentData.user
+      );  
+
+      const existingUserComment = updatedMovie.reviewComments[existingUserCommentIndex];
+      const previousRating = parseFloat(existingUserComment.Rating);
+      
+      updatedMovie.numberOfUsersGivenRating -= 1;
+      updatedMovie.totalRatingValue -= previousRating;
+      updatedMovie.rating = updatedMovie.totalRatingValue/updatedMovie.numberOfUsersGivenRating;
+      
       updatedMovie.reviewComments.splice(index, 1);
 
       await axios.put(updateMovieWithId, updatedMovie, config);
