@@ -56,6 +56,7 @@ export default function MovieReview() {
         user: username || Date.now().toString(),
         comment: comment,
         Rating: userRating,
+        timestamp: new Date().toLocaleString()
       };
 
       updatedMovie.reviewComments.push(newCommentData);
@@ -101,6 +102,10 @@ export default function MovieReview() {
     }
   };
 
+  const handleEditMovie = async () => {
+    navigate(`/update-movie-data/${movieId}`)
+  }
+
   useEffect(() => {
     getMovieData();
   }, []);
@@ -118,6 +123,10 @@ export default function MovieReview() {
               <button onClick={() => navigate("/")}>&larr; Go back</button>
             </div>
             <div className="delete-movie-button">
+              {isAdmin && (
+                <button onClick={handleEditMovie}>Edit Movie</button>
+              )}
+              {' '}
               {isAdmin && (
                 <button onClick={handleDeleteMovie}>Delete Movie</button>
               )}
@@ -201,6 +210,7 @@ export default function MovieReview() {
                     <li key={index}>
                       <strong>User:</strong> {comment.user},{" "}
                       <strong>Comment:</strong> {comment.comment}{" "}
+                      <strong>Posted On:</strong> {comment.timestamp}{" "}
                       {((username && username === comment.user) || isAdmin) && (
                         <>
                           <span
