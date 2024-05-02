@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# MovieMinds
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to MovieMinds! This is a React web application for movie enthusiasts where users can explore, review, and engage with movies. Below you'll find information about the project structure, key components, and how to get started with the application.
 
-## Available Scripts
+## Project Structure
 
-In the project directory, you can run:
+The project structure is organized as follows:
 
-### `npm start`
+- **components**: Contains React components for different parts of the application such as NavBar, Body, Login, Logout, About, Footer, RegistrationForm, RegistrationSuccess, MovieReview, AddMovieData, UpdateMovieData, DisplayMovies, DisplayMovie, and AddNewMovie.
+- **css**: Includes CSS files for styling components such as App.css, About.css, AddMovieData.css, DisplayMovie.css, and AddNewMovie.css.
+- **services**: Contains helper functions and services such as HelperService, GetToken, and URL for managing authentication, API requests, and other utility functions.
+- **store**: Includes Redux related files such as authReducer for managing user authentication state.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Key Components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **NavBar**: Provides navigation links and a search bar for users to navigate through the application and search for movies.
+- **Body**: Displays the main content of the application including movie listings and options to add new movies (for admins).
+- **Login**: Allows users to log in to their accounts.
+- **Logout**: Allows users to log out of their accounts.
+- **About**: Provides information about MovieMinds and its mission.
+- **RegistrationForm**: Allows users to register for a new account.
+- **RegistrationSuccess**: Displays a success message after successful registration.
+- **MovieReview**: Allows users to view details about a specific movie, add reviews, and delete or edit their own reviews (admins can delete any review).
+- **AddMovieData**: Allows admins to add new movie data including name, release year, and photo.
+- **UpdateMovieData**: Allows admins to update existing movie data.
+- **DisplayMovies**: Displays a list of movies with pagination and search functionality.
+- **DisplayMovie**: Displays detailed information about a single movie.
+- **AddNewMovie**: Provides a button for admins to easily add new movies.
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+To get started with MovieMinds:
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Clone this repository to your local machine.
+2. Install dependencies using `npm install`.
+3. Run the application using `npm start`.
+4. Open your browser and navigate to `http://localhost:3000` to view the application.
